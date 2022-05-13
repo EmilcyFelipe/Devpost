@@ -1,10 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StatusBar} from 'react-native';
+
+import {NavigationContainer} from '@react-navigation/native';
+
+import Routes from './src/routes';
 
 export default function App() {
   return (
-    <View>
-      <Text>devpost</Text>
-    </View>
+    <NavigationContainer>
+      <StatusBar
+        backgroundColor="#36393f"
+        barStyle="light-content"
+        translucent={false}
+      />
+      <Routes />
+    </NavigationContainer>
   );
 }
