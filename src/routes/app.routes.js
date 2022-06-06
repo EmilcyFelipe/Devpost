@@ -62,22 +62,22 @@ export default function AppRoutes() {
         component={StackRoutes}
       />
       <Tab.Screen
-        name="Profile"
+        name="Search"
         options={{
           tabBarIcon: ({color, size}) => {
             return <Feather name="search" color={color} size={size} />;
           },
         }}
-        component={Profile}
+        component={Search}
       />
       <Tab.Screen
-        name="Search"
+        name="Profile"
         options={{
           tabBarIcon: ({color, size}) => {
             return <Feather name="user" color={color} size={size} />;
           },
         }}
-        component={Search}
+        component={Profile}
       />
     </Tab.Navigator>
   );
