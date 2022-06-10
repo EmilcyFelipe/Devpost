@@ -34,7 +34,10 @@ function StackRoutes() {
       <Stack.Screen
         name="PostsUser"
         component={PostsUser}
-        options={{headerTintColor: '#FFF'}}
+        options={{
+          headerTintColor: '#FFF',
+          headerStyle: {backgroundColor: '#36393F'},
+        }}
       />
     </Stack.Navigator>
   );

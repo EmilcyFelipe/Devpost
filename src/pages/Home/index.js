@@ -18,6 +18,11 @@ export default function Home() {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [loadingRefresh, setLoadingRefresh] = useState(false);
+  const [lastItem, setLastItem] = useState('');
+  const [emptyList, setEmptyList] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       setLoading(true);
@@ -39,6 +44,8 @@ export default function Home() {
                 });
               });
               setPosts(postList);
+              setLastItem(snapshot.docs[snapshot.docs.length - 1]);
+              setEmptyList(!!snapshot.empty);
               setLoading(false);
             }
           });
@@ -49,6 +56,59 @@ export default function Home() {
       };
     }, []),
   );
+
+  async function handleRefreshPosts() {
+    setLoadingRefresh(true);
+    firestore()
+      .collection('posts')
+      .orderBy('created', 'desc')
+      .limit(5)
+      .get()
+      .then(snapshot => {
+        setPosts([]);
+        const postList = [];
+        snapshot.docs.map(u => {
+          postList.push({
+            ...u.data(),
+            id: u.id,
+          });
+        });
+        setEmptyList(false);
+        setPosts(postList);
+        setLastItem(snapshot.docs[snapshot.docs.length - 1]);
+        setLoading(false);
+      });
+    setLoadingRefresh(false);
+  }
+  //Buscar mais posts ao chegar no final da lista
+  async function getListPosts() {
+    if (emptyList) {
+      // se buscou toda sua lista tiramos o loading
+      setLoading(false);
+      return null;
+    }
+    if (loading) return;
+
+    firestore()
+      .collection('posts')
+      .orderBy('created', 'desc')
+      .limit(5)
+      .startAfter(lastItem)
+      .get()
+      .then(snapshot => {
+        const postList = [];
+        snapshot.docs.map(u => {
+          postList.push({
+            ...u.data(),
+            id: u.id,
+          });
+        });
+        setEmptyList(!!snapshot.empty);
+        setLastItem(snapshot.docs[snapshot.docs.length - 1]);
+        setPosts(oldPosts => [...oldPosts, ...postList]);
+        setLoading(false);
+      });
+  }
   return (
     <Container>
       <Header />
@@ -61,6 +121,10 @@ export default function Home() {
           data={posts}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => <PostsList data={item} userId={user?.uid} />}
+          refreshing={loadingRefresh}
+          onRefresh={handleRefreshPosts}
+          onEndReached={() => getListPosts()}
+          onEndReachedThreshold={0.1}
         />
       )}
       <ButtonPost
