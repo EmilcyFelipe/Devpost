@@ -18,10 +18,12 @@ export const AreaInput = styled.View`
 export const Input = styled.TextInput`
   width: 90%;
   background-color: #f1f1f1;
-  height: 40px;
+  height: 45px;
   padding-left: 8px;
   font-size: 17px;
   color: #121212;
 `;
 
-export const List = styled.FlatList``;
+export const List = styled.FlatList`
+  flex: 1;
+`;

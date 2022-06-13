@@ -12,6 +12,8 @@ import {
 } from './styles.js';
 
 import {AuthContext} from '../../contexts/auth.js';
+import * as Animatable from 'react-native-animatable';
+const TitleAnimated = Animatable.createAnimatableComponent(Title);
 
 export default function Login() {
   const [login, setLogin] = useState(true);
@@ -47,9 +49,9 @@ export default function Login() {
   if (login) {
     return (
       <Container>
-        <Title>
+        <TitleAnimated animation="flipInY">
           Dev<Text style={{color: '#E52246'}}>Post</Text>
-        </Title>
+        </TitleAnimated>
         <Input
           value={email}
           onChangeText={text => setEmail(text)}
@@ -59,6 +61,7 @@ export default function Login() {
           value={password}
           onChangeText={text => setPassword(text)}
           placeholder="*******"
+          secureTextEntry={true}
         />
         <Button onPress={handleSignIn}>
           {loadingAuth ? (
@@ -77,9 +80,9 @@ export default function Login() {
   //SignUp screen
   return (
     <Container>
-      <Title>
+      <TitleAnimated animation="flipInX">
         Dev<Text style={{color: '#E52246'}}>Post</Text>
-      </Title>
+      </TitleAnimated>
       <Input
         value={email}
         onChangeText={text => setEmail(text)}
@@ -94,6 +97,7 @@ export default function Login() {
         value={password}
         onChangeText={text => setPassword(text)}
         placeholder="*******"
+        secureTextEntry={true}
       />
       <Button onPress={handleSignUp}>
         {loadingAuth ? (
